@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/egorka-dino/mc-tg-bot#readme",
   "dependencies": {
+    "@upstash/redis": "^1.38.0",
     "openai": "^6.37.0"
   }
 }
