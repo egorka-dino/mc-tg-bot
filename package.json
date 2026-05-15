@@ -1,0 +1,24 @@
+{
+  "name": "mc-tg-bot",
+  "version": "1.0.0",
+  "description": "Telegram webhook bot for kid-friendly Minecraft chat powered by OpenAI.",
+  "type": "module",
+  "scripts": {
+    "start": "vercel dev",
+    "test": "node --check api/telegram.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egorka-dino/mc-tg-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/egorka-dino/mc-tg-bot/issues"
+  },
+  "homepage": "https://github.com/egorka-dino/mc-tg-bot#readme",
+  "dependencies": {
+    "openai": "^6.37.0"
+  }
+}
