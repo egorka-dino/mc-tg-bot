@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "vercel dev",
-    "test": "node --check api/telegram.js"
+    "test": "node --check api/telegram.js && node --check api/mcp.js"
   },
   "repository": {
     "type": "git",

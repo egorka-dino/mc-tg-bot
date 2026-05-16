@@ -15,6 +15,7 @@ TELEGRAM_WEBHOOK_SECRET=make-a-long-random-secret
 TELEGRAM_ADMIN_IDS=123456789
 UPSTASH_REDIS_REST_URL=https://example.upstash.io
 UPSTASH_REDIS_REST_TOKEN=example-token
+MCP_BEARER_TOKEN=make-a-different-long-random-secret
 ```
 
 `TELEGRAM_WEBHOOK_SECRET` can be any long random string. Telegram will send it back in the `X-Telegram-Bot-Api-Secret-Token` header.
@@ -23,6 +24,55 @@ UPSTASH_REDIS_REST_TOKEN=example-token
 To find your id, send `/myid` to the bot in a private chat.
 
 `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are optional but enable short conversation memory per Telegram chat. `KV_REST_API_URL` and `KV_REST_API_TOKEN` work too if Redis is attached through Vercel KV. The bot stores only the latest user/bot message chain, trims long messages, hides links/emails/phone-like strings, and expires it after 14 days.
+
+`MCP_BEARER_TOKEN` protects the Codex MCP endpoint. Generate a long random value that is different from the Telegram webhook secret.
+
+## Codex MCP
+
+The same Vercel app exposes a remote MCP endpoint:
+
+```text
+https://mc-tg-bot.vercel.app/api/mcp
+```
+
+Use Streamable HTTP with:
+
+```text
+Authorization: Bearer $MCP_BEARER_TOKEN
+```
+
+Codex can be pointed at the remote MCP server with:
+
+```bash
+export MCP_BEARER_TOKEN=replace_with_the_real_token
+codex mcp add mc-tg-bot-vercel \
+  --url https://mc-tg-bot.vercel.app/api/mcp \
+  --bearer-token-env-var MCP_BEARER_TOKEN
+```
+
+Equivalent `~/.codex/config.toml` entry:
+
+```toml
+[mcp_servers.mc-tg-bot-vercel]
+url = "https://mc-tg-bot.vercel.app/api/mcp"
+bearer_token_env_var = "MCP_BEARER_TOKEN"
+enabled = true
+```
+
+The MCP server exposes a narrow admin surface:
+
+- `bot_status` checks non-secret production configuration.
+- `list_website_wishes` reads recent sanitized `/wish` submissions.
+- `draft_minecraft_reply` drafts a kid-friendly Russian Minecraft answer without sending anything to Telegram.
+
+Local smoke test:
+
+```bash
+curl http://localhost:3000/api/mcp \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $MCP_BEARER_TOKEN" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+```
 
 ## Website Wishes
 
